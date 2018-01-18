@@ -11,7 +11,8 @@ image_to_comp = gets.chomp!
 img = Magick::Image.read(image_to_comp).first
 
 base_colours = `identify -format %k "#{image_to_comp}"`
-data = File.open('test_results.txt', 'a') do |line| line.write("Amount of colours in test image before compression: #{base_colours}\n") end
+base_img = File.open("#{image_to_comp}")
+data = File.open('test_results.txt', 'a') do |line| line.write("Amount of colours in test image before compression: #{base_colours} Size: #{base_img.size / 1000}KB\n") end
 
 def get_test_type
     puts "Select test type:\n"\
@@ -50,8 +51,9 @@ def comp_jpeg(amount_func, img_func)
 		img_func.write("compress_JPEG#{amount_got_int}.jpeg") { self.quality = qual }
 		puts "Compressed and wrote #{amount_got_int}. Writing to results file..."
 		colours = `identify -format %k "compress_JPEG#{amount_got_int}.jpeg"`
+		img = File.open("compress_JPEG#{amount_got_int}.jpeg") # get the image for file size checking
 		data = File.open('test_results.txt', 'a+') do |line| # opens the results file for appending data
-		    line.write("#{colours} colours in JPEG image #{amount_got_int}\n") # appends the new data to the end of the file
+		    line.write("#{colours} colours in JPEG image #{amount_got_int} Size: #{img.size / 1000}KB\n") # appends the new data to the end of the file
 		end
 		amount_got_int -= 1
 	end
@@ -67,11 +69,11 @@ def comp_webp(amount_func, img_func)
 		qual -= 10
         system( "cwebp -q #{qual} #{img_func} -o compress_WEBP#{amount_got_int}.webp" )
 		#img_func.write("compress_WEBP#{amount_got_int}.webp") { self.quality = qual }
-        
 		puts "Compressed and wrote #{amount_got_int}. Writing to results file..."
 		colours = `identify -format %k "compress_WEBP#{amount_got_int}.webp"`
+		img = File.open("compress_WEBP#{amount_got_int}.webp") # get the image for file size checking
 		data = File.open('test_results.txt', 'a+') do |line| # opens the results file for appending data
-		    line.write("#{colours} colours in WEBP image #{amount_got_int}\n") # appends the new data to the end of the file
+		    line.write("#{colours} colours in WEBP image #{amount_got_int} Size: #{img.size / 1000}KB\n") # appends the new data to the end of the file
 		end
 		amount_got_int -= 1
 	end
@@ -86,11 +88,11 @@ def comp_bpg(amount_func, img_func) # img_func should be the filename
 	amount_got_int.times do
 	    qual += 1 # we go up because bpgenc is really backwards from everything else
         system( "bpgenc -m #{qual} #{img_func} -o compress_BPG#{amount_got_int}.bpg" )
-        
 		puts "Compressed and wrote #{amount_got_int}. Writing to results file..."
 		colours = `identify -format %k "compress_BPG#{amount_got_int}.bpg"`
+		img = File.open("compress_BPG#{amount_got_int}.bpg") # get the image for file size checking
 		data = File.open('test_results.txt', 'a+') do |line| # opens the results file for appending data
-		    line.write("#{colours} colours in BPG image #{amount_got_int}\n") # appends the new data to the end of the file
+		    line.write("#{colours} colours in BPG image #{amount_got_int} Size: #{img.size / 1000}KB\n") # appends the new data to the end of the file
 		end
 		amount_got_int -= 1
 	end
