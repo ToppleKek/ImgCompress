@@ -1,21 +1,22 @@
 require 'rmagick'
 
-data = File.open('test_results.txt', 'w') do |line| # Creates a new test_results file if there isn't one, opens it for writing.
-                                                     # Each write call overwrites whatever the file had before (w)
-    line.write("ImgCompress Test Results: (At #{Time.now})\n")
-end
-
+data = File.open('test_results.txt', 'w') do |line| line.write("ImgCompress Test Results: (At #{Time.now})\n") end
+# Creates a new test_results file if there isn't one, opens it for writing.
+# Each write call overwrites whatever the file had before (w)
+    
 puts "ImgCompress\n"\
      "Enter name of file to test:"
 
 image_to_comp = gets.chomp!
 img = Magick::Image.read(image_to_comp).first
 
+base_colours = `identify -format %k "#{image_to_comp}"`
+data = File.open('test_results.txt', 'a') do |line| line.write("Amount of colours in test image before compression: #{base_colours}\n") end
 
 def get_test_type
     puts "Select test type:\n"\
          "\n1. JPEG\n"\
-         "2. PNG\n"\
+         "2. BPG\n"\
          "3. WebP\n"\
          "4. Full Test\n"
     test_type = gets.chomp!
@@ -26,9 +27,9 @@ def get_amount_of_times(test_type)
     if test_type.to_i == 4
         return 9
     end
-    puts 'How many times to compress? (1-10) '
+    puts 'How many times to compress? (1-9) '
     comp_amount = gets.chomp!
-    if comp_amount.to_i > 10
+    if comp_amount.to_i > 9
         puts 'Too many times!'
         return false
     elsif comp_amount.to_i < 1
@@ -43,7 +44,7 @@ def comp_jpeg(amount_func, img_func)
     puts "Now compressing your image using JPEG"
 	qual = 100 # set the quality to 100 by default
 	amount_got_int = amount_func.to_i # amount_func is the number of times from a string, this converts it to an int if its a string.
-	data = File.open('test_results.txt', 'a+') do |line| line.write('---JPEG RESULTS---') end
+	data = File.open('test_results.txt', 'a+') do |line| line.write("---JPEG RESULTS---\n") end
 	amount_got_int.times do
 		qual -= 10
 		img_func.write("compress_JPEG#{amount_got_int}.jpeg") { self.quality = qual }
@@ -61,7 +62,7 @@ def comp_webp(amount_func, img_func)
     puts "Now compressing your image using WEBP"
 	qual = 100 # set the quality to 100 by default
 	amount_got_int = amount_func.to_i # amount_func is the number of times from a string, this converts it to an int if its a string.
-	data = File.open('test_results.txt', 'a+') do |line| line.write('---WEBP RESULTS---') end
+	data = File.open('test_results.txt', 'a+') do |line| line.write("---WEBP RESULTS---\n") end
 	amount_got_int.times do
 		qual -= 10
         system( "cwebp -q #{qual} #{img_func} -o compress_WEBP#{amount_got_int}.webp" )
@@ -79,11 +80,11 @@ end
 
 def comp_bpg(amount_func, img_func) # img_func should be the filename
     puts "Now compressing your image using BPG"
-	qual = 10 # set the quality to 10 by default, maybe this is right??
+	qual = 0 # set the quality to 0 by default, maybe this is right?? I guess bpgenc goes smallest number == bigger filesize so we start at 0
 	amount_got_int = amount_func.to_i # amount_func is the number of times from a string, this converts it to an int if its a string.
-	data = File.open('test_results.txt', 'a+') do |line| line.write('---BPG RESULTS---') end
+	data = File.open('test_results.txt', 'a+') do |line| line.write("---BPG RESULTS---\n") end
 	amount_got_int.times do
-		qual -= 1
+	    qual += 1 # we go up because bpgenc is really backwards from everything else
         system( "bpgenc -m #{qual} #{img_func} -o compress_BPG#{amount_got_int}.bpg" )
         
 		puts "Compressed and wrote #{amount_got_int}. Writing to results file..."
