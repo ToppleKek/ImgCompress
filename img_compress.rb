@@ -8,6 +8,23 @@ puts "ImgCompress\n"\
      "Enter name of file to test:"
 
 image_to_comp = gets.chomp!
+
+progress = Enumerator.new do |p|
+    loop do
+        p.yield '|'
+        p.yield '/'
+        p.yield '-'
+        p.yield '\\'
+    end
+end
+
+indicator = Thread.new do
+    until false
+        printf("\rLoading your image please wait... #{progress.next}")
+        sleep(0.2)
+    end
+end
+
 img = Magick::Image.read(image_to_comp).first
 
 base_colours = `identify -format %k "#{image_to_comp}"`
@@ -15,7 +32,7 @@ base_img = File.open("#{image_to_comp}")
 data = File.open('test_results.txt', 'a') do |line| line.write("Amount of colours in test image before compression: #{base_colours} Size: #{base_img.size / 1000}KB\n") end
 
 def get_test_type
-    puts "Select test type:\n"\
+    puts "\nSelect test type:\n"\
          "\n1. JPEG\n"\
          "2. BPG\n"\
          "3. WebP\n"\
@@ -98,6 +115,8 @@ def comp_bpg(amount_func, img_func) # img_func should be the filename
 	end
 	data = File.open('test_results.txt', 'a+') do |line| line.write("---END BPG RESULTS---\n") end
 end
+
+indicator.exit
 
 test_type_got = get_test_type # what test do they want to do?
 
