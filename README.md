@@ -1,13 +1,13 @@
 # ImgCompress
 Script used for testing different compression methods. Used in the 2018 Rotary Science Fair by yours truly.
 
-##Usage
+## Usage
 `ruby img_compress.rb`
 Follow the prompts! It's that simple™ (I hope)
 
-##Installation
+## Installation
 
-###Debian (Stretch/Testing/Unstable) GNU/Linux
+### Debian (Stretch/Testing/Unstable) GNU/Linux
 
 Install packages:
 `sudo apt install build-essential yasm libmagickwand-dev imagemagick libsdl-image1.2-dev cmake libsdl-dev libwebp6 libwebp-dev webp`
@@ -24,7 +24,7 @@ Return to the root directory.
 
 Enjoy.
 
-###Arch Linux
+### Arch Linux
 
 `sudo pacman -S ruby libwebp libpng`
 
@@ -36,13 +36,13 @@ From the AUR:
 Use an AUR Helper or any other way of installing packages from the AUR. (Ex. trizen)
 `trizen -S libbpg`
 
-###macOS
+### macOS
 No.
 
-###Windows
+### Windows
 Haha good one.
 
-###Gems
+### Gems
 To install rmagick:
 `gem install rmagick`
 
