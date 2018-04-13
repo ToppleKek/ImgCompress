@@ -10,7 +10,7 @@ Follow the prompts! It's that simple™ (I hope)
 ### Debian (Stretch/Testing/Unstable) GNU/Linux
 
 Install packages:
-`sudo apt install ruby ruby-dev build-essential yasm libmagickwand-dev imagemagick libsdl-image1.2-dev cmake libsdl-dev libwebp6 libwebp-dev webp`
+`sudo apt update && sudo apt install ruby ruby-dev build-essential yasm libmagickwand-dev imagemagick libsdl-image1.2-dev cmake libsdl-dev libwebp6 libwebp-dev webp`
 
 Download the libbpg source from here: https://bellard.org/bpg/ and extract it.
 

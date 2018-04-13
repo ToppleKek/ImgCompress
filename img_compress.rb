@@ -1,4 +1,5 @@
 require 'rmagick'
+require 'pathname'
 
 data = File.open('test_results.txt', 'w') do |line| line.write("ImgCompress Test Results: (At #{Time.now})\n") end
 # Creates a new test_results file if there isn't one, opens it for writing.
@@ -9,6 +10,11 @@ puts "ImgCompress\n"\
 
 image_to_comp = gets.chomp!
 
+pn = Pathname.new(image_to_comp)
+unless pn.exist?
+    raise 'File does not exist'
+end
+
 progress = Enumerator.new do |p|
     loop do
         p.yield '|'
@@ -18,9 +24,9 @@ progress = Enumerator.new do |p|
     end
 end
 
-indicator = Thread.new do
-    until false
-        printf("\rLoading your image please wait... #{progress.next}")
+indicator = Thread.new do 
+    until false                 
+	printf("\rLoading your image please wait... #{progress.next}")
         sleep(0.2)
     end
 end
@@ -28,7 +34,8 @@ end
 img = Magick::Image.read(image_to_comp).first
 
 base_colours = `identify -format %k "#{image_to_comp}"`
-base_img = File.open("#{image_to_comp}")
+
+base_img = File.open(image_to_comp)
 data = File.open('test_results.txt', 'a') do |line| line.write("Amount of colours in test image before compression: #{base_colours} Size: #{base_img.size / 1000}KB\n") end
 
 def get_test_type
