@@ -91,7 +91,7 @@ def comp_webp(amount_func, img_func)
 	data = File.open('test_results.txt', 'a+') do |line| line.write("---WEBP RESULTS---\n") end
 	amount_got_int.times do
 		qual -= 10
-        system( "cwebp -q #{qual} #{img_func} -o compress_WEBP#{amount_got_int}.webp" )
+        system("cwebp -q #{qual} #{img_func} -o compress_WEBP#{amount_got_int}.webp")
 		#img_func.write("compress_WEBP#{amount_got_int}.webp") { self.quality = qual }
 		puts "Compressed and wrote #{amount_got_int}. Writing to results file..."
 		colours = `identify -format %k "compress_WEBP#{amount_got_int}.webp"`
@@ -111,7 +111,7 @@ def comp_bpg(amount_func, img_func) # img_func should be the filename
 	data = File.open('test_results.txt', 'a+') do |line| line.write("---BPG RESULTS---\n") end
 	amount_got_int.times do
 	    qual += 1 # we go up because bpgenc is really backwards from everything else
-        system( "bpgenc -m #{qual} #{img_func} -o compress_BPG#{amount_got_int}.bpg" )
+        system("bpgenc -m #{qual} #{img_func} -o compress_BPG#{amount_got_int}.bpg")
 		puts "Compressed and wrote #{amount_got_int}. Writing to results file..."
 		colours = `identify -format %k "compress_BPG#{amount_got_int}.bpg"`
 		img = File.open("compress_BPG#{amount_got_int}.bpg") # get the image for file size checking
@@ -142,20 +142,20 @@ amount_got = get_amount_of_times(test_type_got) # how many times do they want to
 case test_type_got.to_i
     when 1
         comp_jpeg(amount_got, img)
-        system( 'cat test_results.txt' )
+        system('cat test_results.txt')
         
     when 2
         comp_bpg(amount_got, image_to_comp) # we pass the method image_to_comp instead of img because we use bpgenc instead of imagemagick here
-        system( 'cat test_results.txt' )
+        system('cat test_results.txt')
         
     when 3
         comp_webp(amount_got, image_to_comp) # same as before, we pass the method image_to_comp instead of img because we use cwebp instead of imagemagick here
-        system( 'cat test_results.txt' )
+        system('cat test_results.txt')
         
     when 4
         comp_jpeg(9, img)
         comp_bpg(9, image_to_comp)
         comp_webp(9, image_to_comp)
-        system( 'cat test_results.txt' )
+        system('cat test_results.txt')
         
     end
